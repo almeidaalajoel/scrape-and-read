@@ -9,7 +9,7 @@ export default async function Reader({
 }: {
   searchParams: { url: string };
 }) {
-  if (!url) redirect("/");
+  // if (!url) redirect("/");
   try {
     const response = await fetch(url);
     const body = await response.text();
