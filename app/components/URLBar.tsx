@@ -1,6 +1,5 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
-import Link from "next/link";
+import { ChangeEvent, useState } from "react";
 
 const URLBar = () => {
   const [text, setText] = useState("");
@@ -11,7 +10,7 @@ const URLBar = () => {
   return (
     <>
       <input value={text} onChange={handleChange} />
-      <Link href={"/reader?url=" + text}>Submit</Link>
+      <a href={"/reader?url=" + text}>Submit</a>
     </>
   );
 };
