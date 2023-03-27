@@ -8,3 +8,8 @@
 body {
   height: 100%;
 }
+
+@font-face {
+  font-family: "Bookerly";
+  src: url("./assets/Fonts/Bookerly.ttf");
+}
