@@ -55,3 +55,5 @@ export default async function Reader({
     return redirect("/?error=" + url);
   }
 }
+
+export const dynamic = "force-dynamic";
