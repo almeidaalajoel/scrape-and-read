@@ -21,3 +21,5 @@ export default function Home({ searchParams }: PageProps) {
     </div>
   );
 }
+
+export const dynamic = "force-dynamic";
