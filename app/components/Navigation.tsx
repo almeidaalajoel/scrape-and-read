@@ -4,10 +4,13 @@ import Link from "next/link";
 export default function Navigation({
   prevURL,
   nextURL,
+  navigationError,
 }: {
   prevURL: string;
   nextURL: string;
+  navigationError: boolean;
 }) {
+  const reader = "/reader?url=";
   const nextPrev =
     "flex px-4 lg:px-6 py-2 border-solid border-4 border-[rgb(70,70,70)] lgPh:hover:border-black lgPh:hover:text-black dark:bg-[rgb(23,21,21)] lgPh:hover:bg-white dark:border-gray-300  dark:lgPh:hover:border-white dark:lgPh:hover:text-white bg-[rgb(250,250,250)] dark:lgPh:hover:bg-[rgb(31,27,27)] rounded-2xl items-center justify-center select-none hover:cursor-pointer";
 
@@ -57,22 +60,13 @@ export default function Navigation({
   return (
     <React.Fragment>
       <div className="flex space-x-3 smPh:space-x-5 items-center self-center justify-around my-5 text-[rgb(70,70,70)] dark:text-gray-300 text-xs smPh:text-sm mdPh:text-base sm:text-lg font-bold font-['ProximaNova']">
-        {prevURL === "no" ? (
-          <div className={noNextPrev}>{prevInnards}</div>
-        ) : (
-          <a href={prevURL}>
-            <div className={nextPrev}>{prevInnards}</div>
-          </a>
-        )}
+        <a href={navigationError ? prevURL : reader + prevURL}>
+          <div className={nextPrev}>{prevInnards}</div>
+        </a>
         <div className="flex px-4 lg:px-6 py-2 select-none" />
-
-        {nextURL === "no" ? (
-          <div className={noNextPrev}>{nextInnards}</div>
-        ) : (
-          <a href={nextURL}>
-            <div className={nextPrev}>{nextInnards}</div>
-          </a>
-        )}
+        <a href={navigationError ? nextURL : reader + nextURL}>
+          <div className={nextPrev}>{nextInnards}</div>
+        </a>
       </div>
     </React.Fragment>
   );
