@@ -4,11 +4,15 @@ import Link from "next/link";
 export default function Navigation({
   prevURL,
   nextURL,
-  navigationError,
+  url,
+  prevNavigationError,
+  nextNavigationError,
 }: {
   prevURL: string;
   nextURL: string;
-  navigationError: boolean;
+  url: string;
+  prevNavigationError: boolean;
+  nextNavigationError: boolean;
 }) {
   const reader = "/reader?url=";
   const nextPrev =
@@ -60,11 +64,16 @@ export default function Navigation({
   return (
     <React.Fragment>
       <div className="flex space-x-3 smPh:space-x-5 items-center self-center justify-around my-5 text-[rgb(70,70,70)] dark:text-gray-300 text-xs smPh:text-sm mdPh:text-base sm:text-lg font-bold font-['ProximaNova']">
-        <a href={navigationError ? prevURL : reader + prevURL}>
+        <a href={prevNavigationError ? prevURL : reader + prevURL}>
           <div className={nextPrev}>{prevInnards}</div>
         </a>
-        <div className="flex px-4 lg:px-6 py-2 select-none" />
-        <a href={navigationError ? nextURL : reader + nextURL}>
+        <a
+          href={"/?url=" + url}
+          className="flex px-4 lg:px-6 py-2 border-solid border-4 border-[rgb(70,70,70)] lgPh:hover:border-black bg-[rgb(250,250,250)] dark:bg-[rgb(23,21,21)] lgPh:hover:bg-white dark:border-gray-300  dark:lgPh:hover:border-white dark:lgPh:hover:text-white dark:lgPh:hover:bg-[rgb(31,27,27)] rounded-2xl items-center justify-center select-none hover:cursor-pointer"
+        >
+          <div className="h-6 sm:h-7 flex items-center">Home</div>
+        </a>
+        <a href={nextNavigationError ? nextURL : reader + nextURL}>
           <div className={nextPrev}>{nextInnards}</div>
         </a>
       </div>

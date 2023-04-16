@@ -24,14 +24,43 @@ export default async function Reader({
       prev = entry.find("a:icontains('previous')").attr("href") || "";
     }
     let next = entry.find("a:icontains('next')").attr("href") || "";
-    let navigationError = false;
-    if (!prev) {
-      prev = "/?prevError=" + url;
-      navigationError = true;
-    }
-    if (!next) {
-      next = "/?nextError=" + url;
-      navigationError = true;
+    let prevNavigationError = false;
+    let nextNavigationError = false;
+
+    if (!prev || !next) {
+      const chapter = url.match(/\d+(?=\D*$)/);
+      if (chapter) {
+        let chapterNum = parseInt(chapter[0]);
+        if (!prev) {
+          let prevChapter = chapterNum - 1;
+          prev = url.replace(chapter[0], prevChapter.toString());
+          try {
+            await fetch(prev);
+          } catch {
+            prev = "/?prevError=" + url;
+            prevNavigationError = true;
+          }
+        }
+        if (!next) {
+          let nextChapter = chapterNum + 1;
+          next = url.replace(chapter[0], nextChapter.toString());
+          try {
+            await fetch(next);
+          } catch {
+            next = "/?nextError=" + url;
+            nextNavigationError = true;
+          }
+        }
+      } else {
+        if (!prev) {
+          prev = "/?prevError=" + url;
+          prevNavigationError = true;
+        }
+        if (!next) {
+          next = "/?nextError=" + url;
+          nextNavigationError = true;
+        }
+      }
     }
 
     return (
@@ -45,6 +74,13 @@ export default async function Reader({
           className="flex flex-grow flex-col w-full lg:w-[65%] xl:w-[53%] text-[rgb(10,10,10)] bg-white dark:bg-[rgb(23,21,21)] dark:text-[rgb(200,200,200)] p-2 lg:p-12 lg:pt-6 leading-7 text-xl border border-solid border-gray-300 dark:border-gray-900"
         >
           <div className="flex flex-col space-y-8 my-6 break-words">
+            <Navigation
+              prevURL={prev}
+              nextURL={next}
+              url={url}
+              prevNavigationError={prevNavigationError}
+              nextNavigationError={nextNavigationError}
+            />
             {ps.map((ele, i) => {
               if (ele.name == "p") {
                 return <p key={i}>{$(ele).text()}</p>;
@@ -76,13 +112,15 @@ export default async function Reader({
             <Navigation
               prevURL={prev}
               nextURL={next}
-              navigationError={navigationError}
+              url={url}
+              prevNavigationError={prevNavigationError}
+              nextNavigationError={nextNavigationError}
             />
           </div>
         </div>
       </Container>
     );
-  } catch (e) {
+  } catch (e: any) {
     return redirect("/?error=" + url);
   }
 }

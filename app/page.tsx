@@ -1,22 +1,24 @@
 import Container from "./components/Container";
 import URLBar from "./components/URLBar";
 
-interface PageProps {
-  searchParams: Params;
-}
-
 export interface Params {
-  error: string;
-  prevError: string;
-  nextError: string;
+  error: string | null;
+  prevError: string | null;
+  nextError: string | null;
+  url: string | null;
 }
 
-export default function Home({ searchParams }: PageProps) {
-  const { error, prevError, nextError } = searchParams;
+export default function Home({ searchParams }: { searchParams: Params }) {
+  const { error, prevError, nextError, url } = searchParams;
   return (
     <div className="bg-stone-900 min-h-[100dvh] flex justify-center items-center">
       <div className="flex flex-col w-full items-center">
-        <URLBar error={error} prevError={prevError} nextError={nextError} />
+        <URLBar
+          error={error}
+          prevError={prevError}
+          nextError={nextError}
+          url={url}
+        />
       </div>
     </div>
   );
