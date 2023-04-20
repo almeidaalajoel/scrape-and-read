@@ -83,7 +83,7 @@ export default async function Reader({
             />
             {ps.map((ele, i) => {
               if (ele.name == "p") {
-                return <p key={i}>{$(ele).text()}</p>;
+                if ($(ele).text()) return <p key={i}>{$(ele).text()}</p>;
               } else if (ele.name == "img") {
                 return (
                   <div key={i} className="xl:w-[50%] self-center">

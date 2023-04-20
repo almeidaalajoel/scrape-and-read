@@ -2,10 +2,10 @@ import Container from "./components/Container";
 import URLBar from "./components/URLBar";
 
 export interface Params {
-  error: string | null;
-  prevError: string | null;
-  nextError: string | null;
-  url: string | null;
+  error: string | undefined;
+  prevError: string | undefined;
+  nextError: string | undefined;
+  url: string | undefined;
 }
 
 export default function Home({ searchParams }: { searchParams: Params }) {
