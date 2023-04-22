@@ -15,7 +15,7 @@ export default async function Reader({
     const $ = cheerio.load(body);
     const entry = $("html");
     const ps = entry
-      .find("p, img, h1, h2, h3, h4, h5, h6")
+      .find("p, img, h1, h2, h3, h4, h5, h6, hr")
       .not(":has(a)")
       .get();
 
@@ -85,10 +85,17 @@ export default async function Reader({
               if (ele.name == "p") {
                 if ($(ele).text()) return <p key={i}>{$(ele).text()}</p>;
               } else if (ele.name == "img") {
+                let src;
+                if ($(ele).attr("src")?.startsWith("/")) {
+                  let domain = new URL(url).hostname;
+                  src = "https://" + domain + $(ele).attr("src");
+                } else {
+                  src = $(ele).attr("src");
+                }
                 return (
                   <div key={i} className="xl:w-[50%] self-center">
                     <img
-                      src={$(ele).attr("src") || ""}
+                      src={src || ""}
                       alt="img"
                       sizes={$(ele).attr("sizes")}
                     />
@@ -106,6 +113,8 @@ export default async function Reader({
                 return <h5 key={i}>{$(ele).text()}</h5>;
               } else if (ele.name == "h6") {
                 return <h6 key={i}>{$(ele).text()}</h6>;
+              } else if (ele.name == "hr") {
+                return <hr key={i} />;
               }
             })}
             <div className="h-[150px]" />
