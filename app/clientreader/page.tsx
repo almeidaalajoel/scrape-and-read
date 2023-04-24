@@ -35,6 +35,7 @@ export default function Reader({
   }, [url, setBody]);
 
   useEffect(() => {
+    console.log(url);
     const entry = $("html");
     setPs(
       entry
@@ -52,25 +53,27 @@ export default function Reader({
     let nextNavigationError = false;
 
     if (!prev || !next) {
-      const chapter = url.match(/\d+(?=\D*$)/);
-      if (chapter) {
-        let chapterNum = parseInt(chapter[0]);
-        if (!prev) {
-          let prevChapter = chapterNum - 1;
-          prev = url.replace(chapter[0], prevChapter.toString());
-        }
-        if (!next) {
-          let nextChapter = chapterNum + 1;
-          next = url.replace(chapter[0], nextChapter.toString());
-        }
-      } else {
-        if (!prev) {
-          prev = "/?prevError=" + url;
-          prevNavigationError = true;
-        }
-        if (!next) {
-          next = "/?nextError=" + url;
-          nextNavigationError = true;
+      if (url) {
+        const chapter = url.match(/\d+(?=\D*$)/);
+        if (chapter) {
+          let chapterNum = parseInt(chapter[0]);
+          if (!prev) {
+            let prevChapter = chapterNum - 1;
+            prev = url.replace(chapter[0], prevChapter.toString());
+          }
+          if (!next) {
+            let nextChapter = chapterNum + 1;
+            next = url.replace(chapter[0], nextChapter.toString());
+          }
+        } else {
+          if (!prev) {
+            prev = "/?prevError=" + url;
+            prevNavigationError = true;
+          }
+          if (!next) {
+            next = "/?nextError=" + url;
+            nextNavigationError = true;
+          }
         }
       }
     }
@@ -78,7 +81,7 @@ export default function Reader({
     setNext(next);
     setPrevNavigationError(prevNavigationError);
     setNextNavigationError(nextNavigationError);
-  }, [body, url, $]);
+  }, [body, url]);
 
   return (
     <Container>
