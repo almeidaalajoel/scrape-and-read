@@ -1,4 +1,3 @@
-import Container from "./components/Container";
 import URLBar from "./components/URLBar";
 
 export interface Params {

@@ -82,8 +82,9 @@ export default async function Reader({
               nextNavigationError={nextNavigationError}
             />
             {ps.map((ele, i) => {
+              const text = $(ele).text();
               if (ele.name == "p") {
-                if ($(ele).text()) return <p key={i}>{$(ele).text()}</p>;
+                if (text) return <p key={i}>{text}</p>;
               } else if (ele.name == "img") {
                 let src;
                 if ($(ele).attr("src")?.startsWith("/")) {
@@ -102,17 +103,17 @@ export default async function Reader({
                   </div>
                 );
               } else if (ele.name == "h1") {
-                return <h1 key={i}>{$(ele).text()}</h1>;
+                return <h1 key={i}>{text}</h1>;
               } else if (ele.name == "h2") {
-                return <h2 key={i}>{$(ele).text()}</h2>;
+                return <h2 key={i}>{text}</h2>;
               } else if (ele.name == "h3") {
-                return <h3 key={i}>{$(ele).text()}</h3>;
+                return <h3 key={i}>{text}</h3>;
               } else if (ele.name == "h4") {
-                return <h4 key={i}>{$(ele).text()}</h4>;
+                return <h4 key={i}>{text}</h4>;
               } else if (ele.name == "h5") {
-                return <h5 key={i}>{$(ele).text()}</h5>;
+                return <h5 key={i}>{text}</h5>;
               } else if (ele.name == "h6") {
-                return <h6 key={i}>{$(ele).text()}</h6>;
+                return <h6 key={i}>{text}</h6>;
               } else if (ele.name == "hr") {
                 return <hr key={i} />;
               }

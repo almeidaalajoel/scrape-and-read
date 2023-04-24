@@ -24,7 +24,7 @@ const URLBar = ({ error, prevError, nextError, url }: Params) => {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      window.location.href = "/reader?url=" + text;
+      window.location.href = "/clientreader?url=" + text;
     }
   };
 
@@ -57,7 +57,11 @@ const URLBar = ({ error, prevError, nextError, url }: Params) => {
           placeholder="Enter URL"
           className="input bg-stone-600 w-full text-stone-300"
         />
-        <a className="btn" href={"/reader?url=" + text} onClick={handleClick}>
+        <a
+          className="btn"
+          href={"/clientreader?url=" + text}
+          onClick={handleClick}
+        >
           Submit
         </a>
       </div>
