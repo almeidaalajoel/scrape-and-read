@@ -5,8 +5,6 @@ import Navigation from "../components/Navigation";
 import Container from "../components/Container";
 import { useEffect, useState } from "react";
 
-export const runtime = "experimental-edge";
-
 export default function Reader({
   searchParams: { url },
 }: {

@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import Link from "next/link";
 
 export default function Navigation({
   prevURL,
@@ -17,9 +16,6 @@ export default function Navigation({
   const reader = "/clientreader?url=";
   const nextPrev =
     "flex px-4 lg:px-6 py-2 border-solid border-4 border-[rgb(70,70,70)] lgPh:hover:border-black lgPh:hover:text-black dark:bg-[rgb(23,21,21)] lgPh:hover:bg-white dark:border-gray-300  dark:lgPh:hover:border-white dark:lgPh:hover:text-white bg-[rgb(250,250,250)] dark:lgPh:hover:bg-[rgb(31,27,27)] rounded-2xl items-center justify-center select-none hover:cursor-pointer";
-
-  const noNextPrev =
-    "flex px-4 lg:px-6 py-2 border-solid border-4 border-[rgb(180,180,180)] text-[rgb(180,180,180)] dark:border-gray-700 dark:text-gray-700 rounded-2xl items-center justify-center select-none";
 
   const prevInnards = (
     <React.Fragment>
