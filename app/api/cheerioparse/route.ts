@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 
 export async function POST(request: NextRequest) {
+  console.log("wtf");
   const parseText = async () => {
+    console.log(await request.text());
     const { text, url } = await request.json();
     console.log("text: ", text);
     const $ = cheerio.load(text);
