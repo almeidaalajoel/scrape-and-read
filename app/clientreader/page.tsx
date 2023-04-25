@@ -13,7 +13,7 @@ export default function Reader() {
   const [next, setNext] = useState("");
   const [prevNavigationError, setPrevNavigationError] = useState(false);
   const [nextNavigationError, setNextNavigationError] = useState(false);
-  const [ps, setPs] = useState<cheerio.Element[]>([]); // [cheerio.Element]
+  const [elements, setElements] = useState<cheerio.Element[]>([]); // [cheerio.Element]
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
 
@@ -21,22 +21,21 @@ export default function Reader() {
 
   useEffect(() => {
     const makeRequest = async () => {
-      const options = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const res = await fetch("/api/fetchbody?url=" + url, options);
-      const responseText = await res.text();
-      setBody(responseText);
+      const res = await fetch("/api/fetchbody?url=" + url);
+      console.log(res.status);
+      if (res.status == 200) {
+        const responseText = await res.text();
+        setBody(responseText);
+      } else {
+        window.location.href = "/?error=" + url;
+      }
     };
     makeRequest();
   }, [url, setBody]);
 
   useEffect(() => {
     const entry = $("html");
-    setPs(
+    setElements(
       entry
         .find("p, img, h1, h2, h3, h4, h5, h6, hr")
         .not(":has(a)")
@@ -44,9 +43,6 @@ export default function Reader() {
     );
 
     let prev = entry.find("a:icontains('prev')").attr("href") || "";
-    if (!prev) {
-      prev = entry.find("a:icontains('previous')").attr("href") || "";
-    }
     let next = entry.find("a:icontains('next')").attr("href") || "";
     let prevNavigationError = false;
     let nextNavigationError = false;
@@ -101,7 +97,7 @@ export default function Reader() {
             nextNavigationError={nextNavigationError}
           />
           {body ? (
-            ps.map((ele, i) => {
+            elements.map((ele, i) => {
               const text = $(ele).text();
               if (ele.name == "p") {
                 if (text) return <p key={i}>{text}</p>;
@@ -160,7 +156,7 @@ export default function Reader() {
           lineHeight: "2rem",
           fontSize: "1.25rem",
         }}
-        className="flex flex-grow flex-col w-full lg:w-[65%] xl:w-[53%] text-[rgb(10,10,10)] bg-white dark:bg-[rgb(23,21,21)] dark:text-[rgb(200,200,200)] p-2 lg:p-12 lg:pt-6 leading-7 text-xl border border-solid border-gray-300 dark:border-gray-900"
+        className="flex flex-grow flex-col w-full lg:w-[65%] xl:w-[53%] text-[rgb(10,10,10)] bg-white dark:bg-[rgb(23,21,21)] dark:text-[rgb(200,200,200)] p-2 lg:p-12 lg:pt-6 leading-7 text-xl border border-solid border-gray-300 dark:border-gray-900 items-center"
       >
         <Loader />
       </div>

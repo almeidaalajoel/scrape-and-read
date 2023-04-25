@@ -22,11 +22,11 @@ const URLBar = ({ error, prevError, nextError, url }: Params) => {
     setLoading(true);
   };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      window.location.href = "/clientreader?url=" + text;
-    }
-  };
+  // const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === "Enter") {
+  //     window.location.href = "/edgereader?url=" + text;
+  //   }
+  // };
 
   useEffect(() => {
     if (url) {
@@ -53,17 +53,10 @@ const URLBar = ({ error, prevError, nextError, url }: Params) => {
           type="text"
           value={text}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
+          // onKeyDown={handleKeyDown}
           placeholder="Enter URL"
           className="input bg-stone-600 w-full text-stone-300"
         />
-        <a
-          className="btn"
-          href={"/clientreader?url=" + text}
-          onClick={handleClick}
-        >
-          Submit
-        </a>
       </div>
       {error && anyError && (
         <p className="text-red-600 font-bold ">
@@ -97,6 +90,25 @@ const URLBar = ({ error, prevError, nextError, url }: Params) => {
           <span className="sr-only">Loading...</span>
         </div>
       )}
+      <div className="flex flex-row w-full justify-between">
+        <a
+          className="btn"
+          href={"/clientreader?url=" + text}
+          onClick={handleClick}
+        >
+          Submit(Client)
+        </a>
+        <a
+          className="btn"
+          href={"/edgereader?url=" + text}
+          onClick={handleClick}
+        >
+          Submit(Edge)
+        </a>
+        <a className="btn" href={"/reader?url=" + text} onClick={handleClick}>
+          Submit(Serverless)
+        </a>
+      </div>
     </div>
   );
 };

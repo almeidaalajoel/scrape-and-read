@@ -6,7 +6,12 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const url = searchParams.get("url");
   if (!url) return new NextResponse("No URL provided", { status: 400 });
-  const response = await fetch(url);
-  const body = await response.text();
+  let body;
+  try {
+    const response = await fetch(url);
+    body = await response.text();
+  } catch (e) {
+    return new NextResponse("Error fetching URL", { status: 400 });
+  }
   return new NextResponse(body, { status: 200 });
 }

@@ -1,8 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
-import * as cheerio from "cheerio";
 import Navigation from "../components/Navigation";
 import { redirect } from "next/navigation";
 import Container from "../components/Container";
+
+interface ParsedData {
+  name: string;
+  text: string;
+  src: string;
+  sizes: string;
+}
+
+interface MyData {
+  parsed: ParsedData[];
+  next: string;
+  nextNavigationError: boolean;
+  prev: string;
+  prevNavigationError: boolean;
+}
+
+export const runtime = "experimental-edge";
 
 export default async function Reader({
   searchParams: { url },
@@ -11,42 +27,26 @@ export default async function Reader({
 }) {
   try {
     const response = await fetch(url);
-    const body = await response.text();
-    const $ = cheerio.load(body);
-    const entry = $("html");
-    const elements = entry
-      .find("p, img, h1, h2, h3, h4, h5, h6, hr")
-      .not(":has(a)")
-      .get();
-
-    let prev = entry.find("a:icontains('prev')").attr("href") || "";
-    let next = entry.find("a:icontains('next')").attr("href") || "";
-    let prevNavigationError = false;
-    let nextNavigationError = false;
-
-    if (!prev || !next) {
-      const chapter = url.match(/\d+(?=\D*$)/);
-      if (chapter) {
-        let chapterNum = parseInt(chapter[0]);
-        if (!prev) {
-          let prevChapter = chapterNum - 1;
-          prev = url.replace(chapter[0], prevChapter.toString());
-        }
-        if (!next) {
-          let nextChapter = chapterNum + 1;
-          next = url.replace(chapter[0], nextChapter.toString());
-        }
-      } else {
-        if (!prev) {
-          prev = "/?prevError=" + url;
-          prevNavigationError = true;
-        }
-        if (!next) {
-          next = "/?nextError=" + url;
-          nextNavigationError = true;
-        }
-      }
-    }
+    const text = await response.text();
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text, url }),
+    };
+    const elementsResponse = await fetch(
+      "http://localhost:3000/api/cheerioparse",
+      options
+    );
+    const elements = await elementsResponse.json();
+    const {
+      parsed,
+      next,
+      nextNavigationError,
+      prev,
+      prevNavigationError,
+    }: MyData = elements;
 
     return (
       <Container>
@@ -66,25 +66,19 @@ export default async function Reader({
               prevNavigationError={prevNavigationError}
               nextNavigationError={nextNavigationError}
             />
-            {elements.map((ele, i) => {
-              const text = $(ele).text();
+            {parsed.map((ele, i) => {
+              const text = ele.text;
               if (ele.name == "p") {
                 if (text) return <p key={i}>{text}</p>;
               } else if (ele.name == "img") {
-                let src;
-                if ($(ele).attr("src")?.startsWith("/")) {
+                let src = ele.src;
+                if (src.startsWith("/")) {
                   let domain = new URL(url).hostname;
-                  src = "https://" + domain + $(ele).attr("src");
-                } else {
-                  src = $(ele).attr("src");
+                  src = "https://" + domain + src;
                 }
                 return (
                   <div key={i} className="xl:w-[50%] self-center">
-                    <img
-                      src={src || ""}
-                      alt="img"
-                      sizes={$(ele).attr("sizes")}
-                    />
+                    <img src={src || ""} alt="img" sizes={ele.sizes} />
                   </div>
                 );
               } else if (ele.name == "h1") {
