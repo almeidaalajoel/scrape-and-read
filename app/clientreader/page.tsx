@@ -22,7 +22,6 @@ export default function Reader() {
   useEffect(() => {
     const makeRequest = async () => {
       const res = await fetch("/api/fetchbody?url=" + url);
-      console.log(res.status);
       if (res.status == 200) {
         const responseText = await res.text();
         setBody(responseText);

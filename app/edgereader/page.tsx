@@ -36,7 +36,7 @@ export default async function Reader({
       body: JSON.stringify({ text, url }),
     };
     const elementsResponse = await fetch(
-      "http://localhost:3000/api/cheerioparse",
+      "https://scrape-and-read.vercel.app/api/cheerioparse",
       options
     );
     const elements = await elementsResponse.json();
