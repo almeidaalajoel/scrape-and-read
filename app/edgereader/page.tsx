@@ -110,6 +110,7 @@ export default async function Reader({
       </Container>
     );
   } catch (e: any) {
+    console.log(e);
     return redirect("/?error=" + url);
   }
 }
