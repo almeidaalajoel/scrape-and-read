@@ -4,6 +4,7 @@ import * as cheerio from "cheerio";
 export async function POST(request: NextRequest) {
   const parseText = async () => {
     const { text, url } = await request.json();
+    console.log("text: ", text);
     const $ = cheerio.load(text);
     const entry = $("html");
     const elements = entry
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
     let next = entry.find("a:icontains('next')").attr("href") || "";
     let prevNavigationError = false;
     let nextNavigationError = false;
-
+    console.log("hmm");
     if (!prev || !next) {
       const chapter = url.match(/\d+(?=\D*$)/);
       if (chapter) {
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
         }
       }
     }
+    console.log("here?");
     const parsed = elements.map((ele) => {
       const eleData = {
         name: ele.name,
@@ -60,8 +62,9 @@ export async function POST(request: NextRequest) {
   let data;
   try {
     data = await parseText();
+    console.log("data: ", data);
   } catch (e) {
-    console.log(e);
+    console.log("e: ", e);
     return new NextResponse("Failed to parse data", {
       status: 400,
     });
