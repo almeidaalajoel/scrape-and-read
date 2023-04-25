@@ -61,9 +61,11 @@ export async function POST(request: NextRequest) {
   try {
     data = await parseText();
   } catch (e) {
+    console.log(e);
     return new NextResponse("Failed to parse data", {
       status: 400,
     });
   }
+  console.log("data: ", data);
   return NextResponse.json(data);
 }

@@ -39,6 +39,8 @@ export default async function Reader({
       "http://localhost:3000/api/cheerioparse",
       options
     );
+    console.log(await elementsResponse.text());
+    console.log(elementsResponse.status);
     const elements = await elementsResponse.json();
     const {
       parsed,
