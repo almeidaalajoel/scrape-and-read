@@ -34,3 +34,12 @@ hr:after {
   padding: 0 0.25em;
   background: rgb(23, 21, 21);
 }
+
+h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1.3;
+  color: #ccc;
+  margin-bottom: 3rem !important;
+  text-align: center;
+}

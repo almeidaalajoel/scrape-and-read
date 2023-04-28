@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const response = await fetch(url);
     body = await response.text();
   } catch (e) {
+    console.log(e);
     return new NextResponse("Error fetching URL", { status: 400 });
   }
   return new NextResponse(body, { status: 200 });
