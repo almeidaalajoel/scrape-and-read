@@ -6,10 +6,7 @@ export async function POST(request: NextRequest) {
     const { text, url } = await request.json();
     const $ = cheerio.load(text);
     const entry = $("html");
-    const elements = entry
-      .find("p, img, h1, h2, h3, h4, h5, h6, hr")
-      .not(":has(a)")
-      .get();
+    const elements = entry.find("p, img, h1, h2, h3, h4, h5, h6, hr").get();
 
     let prev = entry.find("a:icontains('prev')").attr("href") || "";
     let next = entry.find("a:icontains('next')").attr("href") || "";
