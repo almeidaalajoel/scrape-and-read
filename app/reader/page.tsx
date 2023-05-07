@@ -14,10 +14,7 @@ export default async function Reader({
     const body = await response.text();
     const $ = cheerio.load(body);
     const entry = $("html");
-    const elements = entry
-      .find("p, img, h1, h2, h3, h4, h5, h6, hr")
-      .not(":has(a)")
-      .get();
+    const elements = entry.find("p, img, h1, h2, h3, h4, h5, h6, hr").get();
 
     let prev = entry.find("a:icontains('prev')").attr("href") || "";
     let next = entry.find("a:icontains('next')").attr("href") || "";
@@ -73,12 +70,12 @@ export default async function Reader({
                   return <p key={i}>{text}</p>;
                 }
               } else if (ele.name == "img") {
-                let src;
-                if ($(ele).attr("src")?.startsWith("/")) {
+                const origSrc = $(ele).attr("src");
+                let src = origSrc;
+                if (origSrc?.startsWith("//")) src = "https:" + origSrc;
+                else if (origSrc?.startsWith("/")) {
                   let domain = new URL(url).hostname;
                   src = "https://" + domain + $(ele).attr("src");
-                } else {
-                  src = $(ele).attr("src");
                 }
                 return (
                   <div key={i} className="xl:w-[50%] self-center">

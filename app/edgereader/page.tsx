@@ -71,14 +71,9 @@ export default async function Reader({
               if (ele.name == "p") {
                 if (text.trim()) return <p key={i}>{text}</p>;
               } else if (ele.name == "img") {
-                let src = ele.src;
-                if (src.startsWith("/")) {
-                  let domain = new URL(url).hostname;
-                  src = "https://" + domain + src;
-                }
                 return (
                   <div key={i} className="xl:w-[50%] self-center">
-                    <img src={src || ""} alt="img" sizes={ele.sizes} />
+                    <img src={ele.src || ""} alt="img" sizes={ele.sizes} />
                   </div>
                 );
               } else if (ele.name == "h1") {
