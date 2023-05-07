@@ -42,11 +42,13 @@ export async function POST(request: NextRequest) {
         src: "",
         sizes: $(ele).attr("sizes") ?? "",
       };
-      if ($(ele).attr("src")?.startsWith("/")) {
+      const src = $(ele).attr("src");
+      if (src?.startsWith("//")) eleData.src = "https:" + src;
+      if (src?.startsWith("/")) {
         let domain = new URL(url).hostname;
-        eleData.src = "https://" + domain + $(ele).attr("src");
+        eleData.src = "https://" + domain + src;
       } else {
-        eleData.src = $(ele).attr("src") ?? "";
+        eleData.src = src ?? "";
       }
       return eleData;
     });
