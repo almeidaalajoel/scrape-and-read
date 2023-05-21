@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import Navigation from "../components/Navigation";
+import Navigation from "../../app/components/Navigation";
 import { redirect } from "next/navigation";
-import Container from "../components/Container";
+import Container from "../../app/components/Container";
 
 interface ParsedData {
   name: string;
