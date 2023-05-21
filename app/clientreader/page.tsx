@@ -1,9 +1,9 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 import * as cheerio from "cheerio";
 import Navigation from "../components/Navigation";
 import Container from "../components/Container";
 import Loader from "../components/Loader";
+import ElementParser from "../components/ElementParser";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -14,10 +14,20 @@ export default function Reader() {
   const [prevNavigationError, setPrevNavigationError] = useState(false);
   const [nextNavigationError, setNextNavigationError] = useState(false);
   const [elements, setElements] = useState<cheerio.Element[]>([]); // [cheerio.Element]
+  const [domain, setDomain] = useState("");
+  const [pathname, setPathname] = useState("");
   const searchParams = useSearchParams();
   const url = searchParams.get("url");
 
   const $ = cheerio.load(body);
+
+  useEffect(() => {
+    if (url) {
+      const urlObj = new URL(url);
+      setDomain(urlObj.hostname);
+      setPathname(urlObj.pathname);
+    }
+  }, [url]);
 
   useEffect(() => {
     const makeRequest = async () => {
@@ -34,11 +44,9 @@ export default function Reader() {
 
   useEffect(() => {
     const entry = $("html");
-    setElements(
-      entry
-        .find("p, img, h1, h2, h3, h4, h5, h6, hr")
-        .get() as cheerio.Element[]
-    );
+    if (domain == "xianxiaengine.com")
+      setElements(entry.find(".bullet-comment-span, h1, hr").get());
+    else setElements(entry.find("p, img, h1, h2, h3, h4, h5, h6, hr").get());
 
     let prev = entry.find("a:icontains('prev')").attr("href") || "";
     let next = entry.find("a:icontains('next')").attr("href") || "";
@@ -74,7 +82,7 @@ export default function Reader() {
     setNext(next);
     setPrevNavigationError(prevNavigationError);
     setNextNavigationError(nextNavigationError);
-  }, [body, url]);
+  }, [body, url, domain, pathname]);
 
   return url ? (
     <Container>
@@ -95,43 +103,7 @@ export default function Reader() {
             nextNavigationError={nextNavigationError}
           />
           {body ? (
-            elements.map((ele, i) => {
-              const text = $(ele).text();
-              if (ele.name == "p") {
-                if (text.trim()) return <p key={i}>{text}</p>;
-              } else if (ele.name == "img") {
-                const origSrc = $(ele).attr("src");
-                let src = origSrc;
-                if (origSrc?.startsWith("//")) src = "https:" + origSrc;
-                else if (origSrc?.startsWith("/")) {
-                  let domain = new URL(url).hostname;
-                  src = "https://" + domain + origSrc;
-                }
-                return (
-                  <div key={i} className="xl:w-[50%] self-center">
-                    <img
-                      src={src || ""}
-                      alt="img"
-                      sizes={$(ele).attr("sizes")}
-                    />
-                  </div>
-                );
-              } else if (ele.name == "h1") {
-                return <h1 key={i}>{text}</h1>;
-              } else if (ele.name == "h2") {
-                return <h2 key={i}>{text}</h2>;
-              } else if (ele.name == "h3") {
-                return <h3 key={i}>{text}</h3>;
-              } else if (ele.name == "h4") {
-                return <h4 key={i}>{text}</h4>;
-              } else if (ele.name == "h5") {
-                return <h5 key={i}>{text}</h5>;
-              } else if (ele.name == "h6") {
-                return <h6 key={i}>{text}</h6>;
-              } else if (ele.name == "hr") {
-                return <hr key={i} />;
-              }
-            })
+            <ElementParser elements={elements} $={$} domain={domain} />
           ) : (
             <Loader />
           )}

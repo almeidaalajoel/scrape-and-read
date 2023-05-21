@@ -48,7 +48,7 @@ const URLBar = ({ error, prevError, nextError, url }: Params) => {
 
   return (
     <div className="flex flex-col w-full md:w-1/2 xl:w-1/3 items-center">
-      <div className="flex flex-col md:flex-row w-full justify-center">
+      <div className="flex flex-row md:flex-row w-full justify-center">
         <input
           type="text"
           value={text}
@@ -57,6 +57,15 @@ const URLBar = ({ error, prevError, nextError, url }: Params) => {
           placeholder="Enter URL"
           className="input bg-stone-600 w-full text-stone-300"
         />
+        <span className="">
+          <a
+            className="btn"
+            href={"/clientreader?url=" + text}
+            onClick={handleClick}
+          >
+            Submit
+          </a>
+        </span>
       </div>
       {error && anyError && (
         <p className="text-red-600 font-bold ">
@@ -90,25 +99,6 @@ const URLBar = ({ error, prevError, nextError, url }: Params) => {
           <span className="sr-only">Loading...</span>
         </div>
       )}
-      <div className="flex flex-row w-full justify-between">
-        <a
-          className="btn"
-          href={"/clientreader?url=" + text}
-          onClick={handleClick}
-        >
-          Submit(Client)
-        </a>
-        <a
-          className="btn"
-          href={"/edgereader?url=" + text}
-          onClick={handleClick}
-        >
-          Submit(Edge)
-        </a>
-        <a className="btn" href={"/reader?url=" + text} onClick={handleClick}>
-          Submit(Serverless)
-        </a>
-      </div>
     </div>
   );
 };
