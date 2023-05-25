@@ -44,12 +44,29 @@ export default function Reader() {
 
   useEffect(() => {
     const entry = $("html");
-    if (domain == "xianxiaengine.com")
+    let prev, next;
+    if (url && domain == "xianxiaengine.com") {
       setElements(entry.find(".bullet-comment-span, h1, hr").get());
-    else setElements(entry.find("p, img, h1, h2, h3, h4, h5, h6, hr").get());
+      let h1 = entry.find("h1").text();
+      if (h1.toLowerCase().includes("part 1")) {
+        if (pathname.endsWith("/")) next = url.slice(0, url.length - 1);
+        next = url + "-part-2";
+      }
+      if (h1.toLowerCase().includes("part 2")) {
+        next = url.replace("-part-2", "");
+        prev = next;
+        const chapter = next.match(/\d+(?=\D*$)/);
+        if (chapter) {
+          const nextChapter = parseInt(chapter[0]) + 1;
+          next = next.replace(chapter[0], nextChapter.toString());
+        }
+      }
+    } else {
+      setElements(entry.find("p, img, h1, h2, h3, h4, h5, h6, hr").get());
 
-    let prev = entry.find("a:icontains('prev')").attr("href") || "";
-    let next = entry.find("a:icontains('next')").attr("href") || "";
+      prev = entry.find("a:icontains('prev')").attr("href") || "";
+      next = entry.find("a:icontains('next')").attr("href") || "";
+    }
     let prevNavigationError = false;
     let nextNavigationError = false;
 
@@ -78,8 +95,10 @@ export default function Reader() {
         }
       }
     }
-    setPrev(prev);
-    setNext(next);
+    if (prev && next) {
+      setPrev(prev);
+      setNext(next);
+    }
     setPrevNavigationError(prevNavigationError);
     setNextNavigationError(nextNavigationError);
   }, [body, url, domain, pathname]);
