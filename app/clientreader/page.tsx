@@ -46,6 +46,7 @@ export default function Reader() {
     const entry = $("html");
     let prev, next;
     if (url && domain == "xianxiaengine.com") {
+      // Special case
       setElements(entry.find(".bullet-comment-span, h1, hr").get());
       let h1 = entry.find("h1").text();
       if (h1.toLowerCase().includes("part 1")) {
@@ -64,8 +65,18 @@ export default function Reader() {
     } else {
       setElements(entry.find("p, img, h1, h2, h3, h4, h5, h6, hr").get());
 
-      prev = entry.find("a:icontains('prev')").attr("href") || "";
-      next = entry.find("a:icontains('next')").attr("href") || "";
+      if (domain == "americanfaux.com") {
+        // Special case
+        const endOfText = $(".wp-block-separator");
+        const navLinks = endOfText.next("p");
+        const prevLink = navLinks.children("a").first();
+        const nextLink = prevLink.next("a");
+        prev = prevLink.attr("href") || "";
+        next = nextLink.attr("href") || "";
+      } else {
+        prev = entry.find("a:icontains('prev')").attr("href") || "";
+        next = entry.find("a:icontains('next')").attr("href") || "";
+      }
     }
     let prevNavigationError = false;
     let nextNavigationError = false;
