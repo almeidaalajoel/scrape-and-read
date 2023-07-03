@@ -70,7 +70,7 @@ export default function Reader() {
         const endOfText = $(".wp-block-separator");
         const navLinks = endOfText.next("p");
         const prevLink = navLinks.children("a").first();
-        const nextLink = prevLink.next("a");
+        const nextLink = navLinks.children("a").last();
         prev = prevLink.attr("href") || "";
         next = nextLink.attr("href") || "";
       } else {
