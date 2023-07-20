@@ -44,6 +44,7 @@ export default function Reader() {
 
   useEffect(() => {
     const entry = $("html");
+    $(entry).find("script, style").remove();
     let prev, next;
     if (url && domain == "xianxiaengine.com") {
       // Special case
