@@ -74,6 +74,10 @@ export default function Reader() {
         const nextLink = navLinks.children("a").last();
         prev = prevLink.attr("href") || "";
         next = nextLink.attr("href") || "";
+      } else if (domain == "zirusmusings.net") {
+        // Special case
+        prev = entry.find("a:icontains('prev')").last().attr("href") || "";
+        next = entry.find("a:icontains('next')").last().attr("href") || "";
       } else {
         prev = entry.find("a:icontains('prev')").attr("href") || "";
         next = entry.find("a:icontains('next')").attr("href") || "";
@@ -108,6 +112,9 @@ export default function Reader() {
       }
     }
     if (prev && next) {
+      const r = new RegExp("^(?:[a-z+]+:)?//", "i");
+      if (!r.test(prev)) prev = "https://" + domain + prev;
+      if (!r.test(next)) next = "https://" + domain + next;
       setPrev(prev);
       setNext(next);
     }
